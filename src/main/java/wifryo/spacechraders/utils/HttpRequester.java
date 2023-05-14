@@ -1,17 +1,25 @@
 package wifryo.spacechraders.utils;
 
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
+
+import org.json.JSONObject;
+
+
 
 public class HttpRequester {
 
-    private static final String USER_AGENT = "Mozilla/5.0";
-
-    private static final String GET_URL = "https://spacetraders.io";
+    @Value("$spacechraders.apiKey")
+    private String apiKey;
+    private static final String GET_URL = "https://api.spacetraders.io/v2/my/agent";
 
     private static final String POST_URL = "https://localhost:9090/SpringMVCExample/home";
 
@@ -22,7 +30,8 @@ public class HttpRequester {
         URL obj = new URL(POST_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setRequestProperty("Content-Type", "application/json");
+
 
         // For POST only - START
         con.setDoOutput(true);
@@ -52,11 +61,19 @@ public class HttpRequester {
         }
     }
 
-    public void sendGet() throws IOException {
+/*    public static JSONObject sendGet() throws IOException {
+        String json = IOUtils.toString("localhost:8080/api/data", Charset.forName("UTF-8"));
+        return new JSONObject(json);
+    }*/
+
+
+    /*public String sendGet() throws IOException {
         URL obj = new URL(GET_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Authorization", "Bearer " + apiKey);
         int responseCode = con.getResponseCode();
         System.out.println("GET Response Code :: " + responseCode);
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
@@ -70,10 +87,14 @@ public class HttpRequester {
             in.close();
 
             // print result
-            System.out.println(response.toString());
+            // System.out.println(response.toString());
+            return response.toString();
         } else {
+            JSONObject myResponse = new JSONObject(response.toString());
+
             System.out.println("GET request did not work.");
+            return "shite";
         }
 
-    }
+    }*/
 }

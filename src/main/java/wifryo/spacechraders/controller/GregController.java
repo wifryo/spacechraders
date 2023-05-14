@@ -34,10 +34,10 @@ public class GregController {
     public List<Employee> getEmployees() {
         return List.of(new Employee("John","Doe","Egg"), new Employee("Adam","Smith","Egg"));
     }
-    @GetMapping("/greg")
+/*    @GetMapping("/greg")
     public String getGreg() throws IOException {
         HttpRequester jim = new HttpRequester();
-        jim.sendGet();
-        return "chode";
-    }
+        String greb = jim.sendGet();
+        return greb;
+    }*/
 }
