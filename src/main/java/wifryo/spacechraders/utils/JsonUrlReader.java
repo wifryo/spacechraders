@@ -15,48 +15,46 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
 
 public class JsonUrlReader {
 
-    public static void main(String[] args) throws StreamReadException, DatabindException, MalformedURLException, IOException {
-        String url = args[0];
+    @Value("$spacechraders.apiKey")
+    private String apiKey;
+    private String apiUrl = "https://api.spacetraders.io/v2/my/agent";
 
-        JsonNode node = JsonUrlReader.get(url);
+   public void go() throws StreamReadException, DatabindException, MalformedURLException, IOException {
+       WebClient client = WebClient.builder()
+               .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+               .defaultHeader("Authorization", apiKey)
+               .build();
+
+        JsonNode node = JsonUrlReader.get(client, apiUrl);
         System.out.println(node.toPrettyString());
     }
 
-    public static String stream(String url) throws IOException {
-        try (InputStream input = new URL(url).openStream()) {
-            InputStreamReader isr = new InputStreamReader(input, Charset.forName("UTF-8"));
-            BufferedReader reader = new BufferedReader(isr);
-            StringBuilder json = new StringBuilder();
-            int c;
-            while ((c = reader.read()) != -1) {
-                json.append((char) c);
-            }
-            return json.toString();
-        }
-    }
-
-    public static JsonNode get(String url) throws StreamReadException, DatabindException, MalformedURLException, IOException {
+    //this one works
+/*    public static JsonNode get(String url) throws StreamReadException, DatabindException, MalformedURLException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(new URL(url));
         return json;
+    }*/
+
+    public static JsonNode get(WebClient client, String url) {
+        return client.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .block();
     }
 
-    public static <T> T get(String url, Class<T> type) throws StreamReadException, DatabindException, MalformedURLException, IOException {
+/*    public static <T> T get(String url, Class<T> type) throws StreamReadException, DatabindException, MalformedURLException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         T entity = mapper.readValue(new URL(url), type);
         return entity;
-    }
+    }*/
 
-    public static String getString(String url) throws StreamReadException, DatabindException, MalformedURLException, IOException {
-        return get(url).toPrettyString();
-    }
-
-    public static JSONObject getJson(String url) throws MalformedURLException, IOException {
-        String json = IOUtils.toString(new URL(url), Charset.forName("UTF-8"));
-        JSONObject object = new JSONObject(json);
-        return object;
-    }
 }

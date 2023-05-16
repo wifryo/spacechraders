@@ -67,7 +67,7 @@ public class HttpRequester {
     }*/
 
 
-    /*public String sendGet() throws IOException {
+    public String sendGet() throws IOException {
         URL obj = new URL(GET_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
@@ -90,11 +90,10 @@ public class HttpRequester {
             // System.out.println(response.toString());
             return response.toString();
         } else {
-            JSONObject myResponse = new JSONObject(response.toString());
 
             System.out.println("GET request did not work.");
             return "shite";
         }
 
-    }*/
+    }
 }

@@ -1,14 +1,20 @@
 package wifryo.spacechraders.controller;
 
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 import wifryo.spacechraders.entity.Employee;
-import wifryo.spacechraders.service.EmployeeService;
-import wifryo.spacechraders.utils.HttpRequester;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import wifryo.spacechraders.utils.JsonUrlReader;
 
 
 import java.io.IOException;
@@ -20,7 +26,9 @@ import java.util.Map;
 @RequestMapping("/api")
 public class GregController {
 
-
+    @Value("$spacechraders.apiKey")
+    private String apiKey;
+    private String apiUrl = "https://api.spacetraders.io/v2/my/agent";
 
 
     @GetMapping("/data")
@@ -34,10 +42,19 @@ public class GregController {
     public List<Employee> getEmployees() {
         return List.of(new Employee("John","Doe","Egg"), new Employee("Adam","Smith","Egg"));
     }
-/*    @GetMapping("/greg")
+    @GetMapping("/greg")
     public String getGreg() throws IOException {
-        HttpRequester jim = new HttpRequester();
-        String greb = jim.sendGet();
-        return greb;
-    }*/
+        /*HttpRequester jim = new HttpRequester();
+        String greb = jim.sendGet();*/
+        System.out.println(apiKey);
+
+        JsonUrlReader jim = new JsonUrlReader();
+        jim.go();
+        String ass = "hello";
+        return ass;
+    }
+
+
+
+
 }
