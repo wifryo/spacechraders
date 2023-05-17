@@ -3,15 +3,26 @@ import React, { Fragment, useEffect, useState } from 'react';
 import logo from './logo.svg';
 
 function App() {
-  const [retrievedEmployees, setRetrievedEmployees] = useState([{}]);
+  const [retrievedData, setRetrievedData] = useState({
+    accountId: '',
+    symbol: '',
+    headquarters: '',
+    credits: '',
+  });
 
-  async function getEmployees() {
-    const response = await fetch(`/employees/showAll`, {
+  async function getData() {
+    const response = await fetch(`http://localhost:8080/api/greg`, {
       method: 'GET',
     });
-    const employees = await response.json();
-    setRetrievedEmployees(employees);
+    const data = await response.json();
+    setRetrievedData(data.data);
   }
+
+  useEffect(() => {
+    getData().catch((err) => {
+      console.log(err);
+    });
+  }, []);
 
   return (
     <div className="App">
@@ -28,9 +39,7 @@ function App() {
         >
           Learn React
         </a>
-        {retrievedEmployees.map((employee) => (
-          <div>{employee.firstName}</div>
-        ))}
+        <div>{retrievedData.symbol}</div>
       </header>
     </div>
   );

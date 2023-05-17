@@ -22,26 +22,15 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class JsonUrlReader {
 
-    @Value("$spacechraders.apiKey")
-    private String apiKey;
-    private String apiUrl = "https://api.spacetraders.io/v2/my/agent";
-
-   public void go() throws StreamReadException, DatabindException, MalformedURLException, IOException {
+   public JsonNode go(String apiKey, String apiUrl) throws StreamReadException, DatabindException, MalformedURLException, IOException {
        WebClient client = WebClient.builder()
                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                .defaultHeader("Authorization", apiKey)
                .build();
 
         JsonNode node = JsonUrlReader.get(client, apiUrl);
-        System.out.println(node.toPrettyString());
+        return node;
     }
-
-    //this one works
-/*    public static JsonNode get(String url) throws StreamReadException, DatabindException, MalformedURLException, IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(new URL(url));
-        return json;
-    }*/
 
     public static JsonNode get(WebClient client, String url) {
         return client.get()

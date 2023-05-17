@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class GregController {
 
-    @Value("$spacechraders.apiKey")
+    @Value("${apiKey}")
     private String apiKey;
     private String apiUrl = "https://api.spacetraders.io/v2/my/agent";
 
@@ -43,14 +43,12 @@ public class GregController {
         return List.of(new Employee("John","Doe","Egg"), new Employee("Adam","Smith","Egg"));
     }
     @GetMapping("/greg")
-    public String getGreg() throws IOException {
-        /*HttpRequester jim = new HttpRequester();
-        String greb = jim.sendGet();*/
-        System.out.println(apiKey);
+    public JsonNode getGreg() throws IOException {
 
         JsonUrlReader jim = new JsonUrlReader();
-        jim.go();
-        String ass = "hello";
+        JsonNode ass = jim.go(apiKey, apiUrl);
+        JsonNode crub = ass.get("data");
+        System.out.println("name: " + crub.get("symbol"));
         return ass;
     }
 
